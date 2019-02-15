@@ -7,6 +7,19 @@ let s:class_base = {
 
 let s:new_class_types = get(s:, 'new_class_types', {})
 
+function! ht#object#gen() abort
+  let classes = globpath(&rtp, 'autoload/ht/object/**/*.vim', 1, 1)
+  let pattern = '/autoload/ht/object/'
+
+  let cls_names = []
+  for cls in classes
+    let name = cls[matchend(cls, pattern):-5]
+    let name = substitute(name, '/', '#', 'g')
+
+    call ht#object#{name}#build()
+  endfor
+endfunction
+
 function! ht#object#new_class(cls) abort
   let rst = deepcopy(s:class_base)
   let rst.__name__ = a:cls
